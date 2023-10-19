@@ -1,1 +1,38 @@
+Import cplex
+from docplex.mp.model import Model
+
+# Create a model
+model = Model(name='Distribution_Optimization')
+
+# Decision variables
+units_to_store_a = model.integer_var(name='Units_to_Store_A')
+units_to_store_b = model.integer_var(name='Units_to_Store_B')
+units_to_store_c = model.integer_var(name='Units_to_Store_C')
+
+# Objective function: Minimize transportation costs
+transportation_cost = 5 * units_to_store_a + 7 * units_to_store_b + 6 * units_to_store_c
+model.minimize(transportation_cost)
+
+# Constraints
+# Supply constraint
+model.add_constraint(units_to_store_a + units_to_store_b + units_to_store_c <= 200, 'Supply_Constraint')
+
+# Demand constraints
+model.add_constraint(units_to_store_a >= 80, 'Demand_Store_A')
+model.add_constraint(units_to_store_b >= 50, 'Demand_Store_B')
+model.add_constraint(units_to_store_c >= 70, 'Demand_Store_C')
+
+# Solve the model
+model.solve()
+
+# Display the results
+print(f"Optimal Units Shipped to Store A: {units_to_store_a.solution_value}")
+print(f"Optimal Units Shipped to Store B: {units_to_store_b.solution_value}")
+print(f"Optimal Units Shipped to Store C: {units_to_store_c.solution_value}")
+print(f"Optimal Transportation Cost: {model.objective_value}")
+
+
+
+
+
 
